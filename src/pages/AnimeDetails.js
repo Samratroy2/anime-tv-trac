@@ -12,22 +12,23 @@ const AnimeDetails = () => {
 
   useEffect(() => {
     const allLists = ['watchingList', 'onHoldList', 'droppedList', 'completedList', 'planToWatchList'];
-    let found = null;
+    let foundAnime = null;
 
     for (const list of allLists) {
       const stored = JSON.parse(localStorage.getItem(list)) || [];
-      const existing = stored.find(item => String(item.mal_id) === id);
-      if (existing) {
-        setAnime(existing);
-        setEpisodesWatched(existing.episodesWatched || 0);
+      const match = stored.find(item => String(item.mal_id) === id);
+      if (match) {
+        foundAnime = match;
+        setEpisodesWatched(match.episodesWatched || 0);
         setStatus(list.replace('List', ''));
-        found = true;
         break;
       }
     }
 
-    if (!found) {
-      console.error('Anime not found in local storage lists.');
+    if (foundAnime) {
+      setAnime(foundAnime);
+    } else {
+      console.error('Anime not found in any localStorage list.');
     }
   }, [id]);
 
@@ -41,24 +42,26 @@ const AnimeDetails = () => {
   }, [episodesWatched]);
 
   const updateWatchlist = (watchedCount) => {
-    const animeWithWatched = { ...anime, episodesWatched: watchedCount };
+    const updatedAnime = { ...anime, episodesWatched: watchedCount };
     const allLists = ['planToWatchList', 'watchingList', 'onHoldList', 'droppedList', 'completedList'];
 
+    // Remove from all
     allLists.forEach(list => {
-      const stored = JSON.parse(localStorage.getItem(list)) || [];
-      const updated = stored.filter(item => item.mal_id !== anime.mal_id);
-      localStorage.setItem(list, JSON.stringify(updated));
+      const listData = JSON.parse(localStorage.getItem(list)) || [];
+      const filtered = listData.filter(item => item.mal_id !== anime.mal_id);
+      localStorage.setItem(list, JSON.stringify(filtered));
     });
 
+    // Add to appropriate list
     if (watchedCount === 0) {
-      const plan = JSON.parse(localStorage.getItem('planToWatchList')) || [];
-      plan.push(animeWithWatched);
-      localStorage.setItem('planToWatchList', JSON.stringify(plan));
+      const planList = JSON.parse(localStorage.getItem('planToWatchList')) || [];
+      planList.push(updatedAnime);
+      localStorage.setItem('planToWatchList', JSON.stringify(planList));
       setStatus('');
     } else {
-      const watching = JSON.parse(localStorage.getItem('watchingList')) || [];
-      watching.push(animeWithWatched);
-      localStorage.setItem('watchingList', JSON.stringify(watching));
+      const watchingList = JSON.parse(localStorage.getItem('watchingList')) || [];
+      watchingList.push(updatedAnime);
+      localStorage.setItem('watchingList', JSON.stringify(watchingList));
       setStatus('watching');
     }
   };
@@ -77,12 +80,12 @@ const AnimeDetails = () => {
 
   const moveToList = (targetList) => {
     const animeWithWatched = { ...anime, episodesWatched };
-    const lists = ['watchingList', 'onHoldList', 'droppedList'];
+    const conflictingLists = ['watchingList', 'onHoldList', 'droppedList'];
 
-    lists.forEach(list => {
-      const stored = JSON.parse(localStorage.getItem(list)) || [];
-      const updated = stored.filter(item => item.mal_id !== anime.mal_id);
-      localStorage.setItem(list, JSON.stringify(updated));
+    conflictingLists.forEach(list => {
+      const listData = JSON.parse(localStorage.getItem(list)) || [];
+      const filtered = listData.filter(item => item.mal_id !== anime.mal_id);
+      localStorage.setItem(list, JSON.stringify(filtered));
     });
 
     const target = JSON.parse(localStorage.getItem(targetList)) || [];
@@ -91,26 +94,25 @@ const AnimeDetails = () => {
 
     setStatus(targetList.replace('List', ''));
 
-    if (targetList === 'onHoldList') navigate('/onhold');
-    if (targetList === 'droppedList') navigate('/dropped');
+    if (targetList === 'onHoldList') navigate('/watchlist/on-hold');
+    if (targetList === 'droppedList') navigate('/watchlist/dropped');
   };
 
   const moveToCompleted = () => {
-    const animeWithWatched = { ...anime, episodesWatched };
-    let watchingList = JSON.parse(localStorage.getItem('watchingList')) || [];
-    let completedList = JSON.parse(localStorage.getItem('completedList')) || [];
+    const updated = { ...anime, episodesWatched };
+    const watching = JSON.parse(localStorage.getItem('watchingList')) || [];
+    const completed = JSON.parse(localStorage.getItem('completedList')) || [];
 
-    watchingList = watchingList.filter(item => item.mal_id !== anime.mal_id);
-    localStorage.setItem('watchingList', JSON.stringify(watchingList));
+    const filtered = watching.filter(item => item.mal_id !== anime.mal_id);
+    localStorage.setItem('watchingList', JSON.stringify(filtered));
 
-    completedList.push(animeWithWatched);
-    localStorage.setItem('completedList', JSON.stringify(completedList));
-
+    completed.push(updated);
+    localStorage.setItem('completedList', JSON.stringify(completed));
     setStatus('completed');
-    navigate('/completed');
+    navigate('/watchlist/completed');
   };
 
-  if (!anime) return <div>Anime not found.</div>;
+  if (!anime) return <div style={{ padding: '1rem' }}>❌ Anime not found in your watchlists.</div>;
 
   return (
     <div style={{ maxWidth: '600px', margin: 'auto', padding: '1rem' }}>
@@ -122,13 +124,12 @@ const AnimeDetails = () => {
       />
       <p><strong>Rating:</strong> ⭐ {anime.score}</p>
       <p><strong>Episodes:</strong> {anime.episodes}</p>
-
       <p><strong>Synopsis:</strong> {showMore ? anime.synopsis : `${anime.synopsis.slice(0, 150)}...`}</p>
       <button onClick={() => setShowMore(!showMore)} style={{ marginBottom: '1rem' }}>
         {showMore ? 'Show Less' : 'Show More'}
       </button>
 
-      {/* Episode counter */}
+      {/* Episode Controls */}
       <div style={{ marginTop: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <label><strong>Episodes Watched:</strong></label>
@@ -141,7 +142,7 @@ const AnimeDetails = () => {
         </p>
       </div>
 
-      {/* Control buttons */}
+      {/* On Hold / Drop buttons */}
       {status === 'watching' && (
         <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
           <button onClick={() => moveToList('onHoldList')} style={buttonRed}>⏸ Mark as On Hold</button>
@@ -150,9 +151,7 @@ const AnimeDetails = () => {
       )}
 
       <div style={{ marginTop: '2rem' }}>
-        <button onClick={() => navigate(-1)} style={{ padding: '5px 10px' }}>
-          Close
-        </button>
+        <button onClick={() => navigate(-1)} style={{ padding: '5px 10px' }}>⬅ Close</button>
       </div>
     </div>
   );

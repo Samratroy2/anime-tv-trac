@@ -1,11 +1,10 @@
 //frontend\src\App.js
-
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-
 import Sidebar from './components/Sidebar';
 import { ThemeProvider, useTheme } from './ThemeContext';
 import { ClubProvider } from './contexts/ClubContext';
+
 import Home from './pages/Home';
 import Watchlist from './pages/Watchlist';
 import Watching from './pages/Watching';
@@ -21,19 +20,22 @@ import CreateClub from './pages/CreateClub';
 
 import './App.css';
 
+// 👇 AppLayout stays the same
 const AppLayout = () => {
   const location = useLocation();
-  const [sidebarVisible, setSidebarVisible] = useState(location.pathname === '/');
+  const [collapsed, setCollapsed] = useState(false);
   const { darkMode, toggleTheme } = useTheme();
 
-  const toggleSidebar = () => {
-    setSidebarVisible(prev => !prev);
-  };
+  const handleCollapse = (value) => setCollapsed(value);
 
   const containerStyle = {
     flex: 1,
     padding: '1rem',
-    position: 'relative',
+    marginLeft:
+      window.innerWidth > 768
+        ? collapsed ? '60px' : '220px'
+        : '0px',
+
     backgroundColor: darkMode ? '#121212' : '#ffffff',
     color: darkMode ? '#e0e0e0' : '#000000',
     minHeight: '100vh',
@@ -50,26 +52,13 @@ const AppLayout = () => {
         transition: 'background-color 0.3s ease',
       }}
     >
-      {sidebarVisible && <Sidebar />}
+      <Sidebar collapsed={collapsed} setCollapsed={handleCollapse} />
 
       <div style={containerStyle}>
-        {/* Sidebar Toggle Button */}
-        <button
-          className="menu-toggle"
-          onClick={toggleSidebar}
-        >
-          {sidebarVisible ? '✖' : '☰'}
-        </button>
-
-        {/* Theme Toggle Button */}
-        <button
-          className="theme-toggle"
-          onClick={toggleTheme}
-        >
+        <button className="theme-toggle" onClick={toggleTheme}>
           {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
         </button>
 
-        {/* Routes */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/anime/:id" element={<AnimeDetails />} />
@@ -89,6 +78,7 @@ const AppLayout = () => {
   );
 };
 
+// 👇 Wrap AppLayout in providers and export as default
 const App = () => (
   <Router>
     <ThemeProvider>
@@ -99,4 +89,4 @@ const App = () => (
   </Router>
 );
 
-export default App;
+export default App; // ✅ Required for proper import

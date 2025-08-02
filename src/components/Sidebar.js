@@ -1,33 +1,49 @@
-/*anime-tracker\frontend\src\components\Sidebar.js*/
-
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+// frontend/src/components/Sidebar.js
+import React, { useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
+import {
+  FaHome, FaListAlt, FaCheck, FaPause, FaBan, FaClock,
+  FaUsers, FaTools
+} from 'react-icons/fa';
+import { useTheme } from '../ThemeContext';
 import './Sidebar.css';
 
-const Sidebar = () => {
-  const location = useLocation();
+const Sidebar = ({ collapsed, setCollapsed }) => {
+  const { darkMode } = useTheme();
 
-  const menuItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Watching', path: '/watchlist/watching' },
-    { name: 'Completed', path: '/watchlist/completed' },
-    { name: 'On Hold', path: '/watchlist/on-hold' },
-    { name: 'Dropped', path: '/watchlist/dropped' },
-    { name: 'Plan to Watch', path: '/watchlist/plan-to-watch' },
-    { name: 'Clubs', path: '/clubs' },
-    { name: 'Admin Panel', path: '/admin' }
+  // ✅ Auto collapse/expand based on screen width
+  useEffect(() => {
+    const handleResize = () => {
+      setCollapsed(window.innerWidth <= 768);
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [setCollapsed]);
+
+  const navItems = [
+    { label: 'Home', icon: <FaHome />, to: '/' },
+    { label: 'Watching', icon: <FaListAlt />, to: '/watchlist/watching' },
+    { label: 'Completed', icon: <FaCheck />, to: '/watchlist/completed' },
+    { label: 'On Hold', icon: <FaPause />, to: '/watchlist/on-hold' },
+    { label: 'Dropped', icon: <FaBan />, to: '/watchlist/dropped' },
+    { label: 'Plan to Watch', icon: <FaClock />, to: '/watchlist/plan-to-watch' },
+    { label: 'Clubs', icon: <FaUsers />, to: '/clubs' },
+    { label: 'Admin Panel', icon: <FaTools />, to: '/admin' },
   ];
 
   return (
-    <div className="sidebar">
-      <h2 className="sidebar-title">AniTrack</h2>
-      <ul className="sidebar-menu">
-        {menuItems.map((item, idx) => (
-          <li key={idx} className={location.pathname === item.path ? 'active' : ''}>
-            <Link to={item.path}>{item.name}</Link>
-          </li>
+    <div className={`sidebar ${collapsed ? 'collapsed' : ''} ${darkMode ? 'dark' : 'light'}`}>
+      <div className="logo">{!collapsed && <h2>AniTrack</h2>}</div>
+      <nav>
+        {navItems.map((item, index) => (
+          <NavLink key={index} to={item.to} className="nav-item">
+            <span className="icon">{item.icon}</span>
+            {!collapsed && <span className="label">{item.label}</span>}
+          </NavLink>
         ))}
-      </ul>
+      </nav>
     </div>
   );
 };
