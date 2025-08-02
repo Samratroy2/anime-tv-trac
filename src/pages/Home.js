@@ -1,6 +1,9 @@
+// frontend/src/pages/Home.js
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
+import dummyAnimeData from '../data/dummyAnimeData';
 
 const categories = [
   { title: 'Top Airing' },
@@ -10,24 +13,6 @@ const categories = [
   { title: 'Upcoming' }
 ];
 
-const dummyData = [
-  {
-    mal_id: 1,
-    title: "One Piece",
-    images: { jpg: { image_url: "https://cdn.myanimelist.net/images/anime/6/73245.jpg" } }
-  },
-  {
-    mal_id: 2,
-    title: "Attack on Titan",
-    images: { jpg: { image_url: "https://cdn.myanimelist.net/images/anime/10/47347.jpg" } }
-  },
-  {
-    mal_id: 3,
-    title: "Jujutsu Kaisen",
-    images: { jpg: { image_url: "https://cdn.myanimelist.net/images/anime/1171/109222.jpg" } }
-  }
-];
-
 const Home = () => {
   const [animeData, setAnimeData] = useState({});
   const navigate = useNavigate();
@@ -35,7 +20,7 @@ const Home = () => {
   useEffect(() => {
     const localData = {};
     categories.forEach(cat => {
-      localData[cat.title] = dummyData;
+      localData[cat.title] = dummyAnimeData;
     });
     setAnimeData(localData);
   }, []);
