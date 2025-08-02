@@ -1,0 +1,102 @@
+.home {
+    background-color: #141414;
+    color: #d4c9c9;
+    padding-bottom: 2rem;
+  }
+  
+  .hero-banner {
+    background: url('') center/cover no-repeat;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 3rem;
+    color: rgb(223, 160, 160);
+  }
+  
+  .hero-title {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+  
+  .hero-desc {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+  }
+  
+  .row-section {
+    margin: 2rem 0;
+    padding: 0 2rem;
+  }
+  
+  .row-section h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .scroll-row {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .anime-card {
+    background-color: #222;
+    border-radius: 8px;
+    min-width: 150px;
+    max-width: 150px;
+    transition: transform 0.2s ease;
+  }
+  
+  .anime-card img {
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+  }
+  
+  .anime-card p {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  
+  .anime-card:hover {
+    transform: scale(1.05);
+  }
+
+  .welcome-banner {
+    background: linear-gradient(135deg, #5708c7, #ff7eb3);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 10px rgba(120, 30, 30, 0.2);
+  }
+  
+  .welcome-banner h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .welcome-banner p {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+
+  .hero-banner-slider {
+    margin: 2rem 0;
+  }
+  
+  .hero-slide {
+    position: relative;
+  }
+  
+  .hero-title {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .hero-desc {
+    font-size: 1.2rem;
+  }
+  

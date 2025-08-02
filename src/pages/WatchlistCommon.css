@@ -1,0 +1,48 @@
+.watchlist-page {
+    padding: 2rem;
+  }
+  
+  .anime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .anime-card {
+    background: #1f1f1f;
+    border-radius: 10px;
+    padding: 1rem;
+    color: white;
+    text-align: center;
+  }
+  
+  .anime-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .remove-btn {
+    margin-top: 0.5rem;
+    padding: 6px 10px;
+    background-color: crimson;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .episode-btn {
+    background: #444;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .episode-btn:hover {
+    background-color: #666;
+  }
+  
