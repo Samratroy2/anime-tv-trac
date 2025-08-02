@@ -1,3 +1,4 @@
+// frontend\src\pages\Dropped.js
 import React, { useEffect, useState } from 'react';
 
 const Dropped = () => {

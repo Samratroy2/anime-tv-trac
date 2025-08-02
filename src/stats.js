@@ -1,4 +1,4 @@
-
+//frontend\src\stats.js
 const stats = {
   watchedByStatus: {
     Watching: 3,

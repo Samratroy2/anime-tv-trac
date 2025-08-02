@@ -1,3 +1,4 @@
+// C:\Users\SAMRAT ROY\Downloads\anime-tracker\frontend\src\pages\PlanToWatch.js
 import React, { useEffect, useState } from 'react';
 
 const PlanToWatch = () => {

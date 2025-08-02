@@ -1,4 +1,4 @@
-
+//frontend\src\Spoiler.js
 import React, { useState } from 'react';
 
 const Spoiler = ({ text }) => {

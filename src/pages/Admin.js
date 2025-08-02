@@ -1,3 +1,5 @@
+//frontend\src\pages\Admin.js
+
 import React, { useState } from 'react';
 import './AdminPanel.css'; // keeping external CSS for clean styles
 

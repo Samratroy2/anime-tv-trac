@@ -1,3 +1,4 @@
+// frontend\src\pages\ClubPage.js
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useClubs } from '../contexts/ClubContext';

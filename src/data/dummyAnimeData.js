@@ -1,3 +1,5 @@
+//frontend\src\data\dummyAnimeData.js
+
 const dummyAnimeData = [
   {
     mal_id: 1,

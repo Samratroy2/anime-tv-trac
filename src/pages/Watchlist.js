@@ -1,3 +1,4 @@
+//frontend\src\pages\Watchlist.js
 import React, { useState } from 'react';
 import dummyAnimeData from '../data/dummyAnimeData';
 import './Watchlist.css';

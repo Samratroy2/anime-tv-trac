@@ -1,3 +1,4 @@
+// frontend\src\pages\Discussions.js
 import React from 'react';
 
 const Discussions = () => (

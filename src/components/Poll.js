@@ -1,3 +1,5 @@
+/*anime-tracker\frontend\src\components\poll.js */
+
 import React, { useState } from 'react';
 import Poll from '../components/Poll';
 

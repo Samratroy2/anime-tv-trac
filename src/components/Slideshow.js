@@ -1,4 +1,4 @@
-// src/components/Slideshow.js
+// anime-tracker\frontend\src/components/Slideshow.js
 import React, { useEffect, useState } from 'react';
 import './Slideshow.css';
 

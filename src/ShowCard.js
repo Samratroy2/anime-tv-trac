@@ -1,4 +1,4 @@
-
+// frontend\src\ShowCard.js
 import React from 'react';
 
 const ShowCard = ({ show }) => {

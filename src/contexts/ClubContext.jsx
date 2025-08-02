@@ -1,3 +1,5 @@
+// frontend\src\contexts\ClubContext.jsx
+
 import React, { createContext, useContext, useState } from 'react';
 
 const ClubContext = createContext();
