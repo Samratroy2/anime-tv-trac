@@ -1,8 +1,5 @@
-// frontend\src\pages\AnimeDetails.js
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './AnimeDetails.css';
 
 const AnimeDetails = () => {
@@ -11,38 +8,32 @@ const AnimeDetails = () => {
   const [anime, setAnime] = useState(null);
   const [showMore, setShowMore] = useState(false);
   const [episodesWatched, setEpisodesWatched] = useState(0);
-  const [status, setStatus] = useState(''); // Watching / On Hold / Dropped / Completed
+  const [status, setStatus] = useState('');
 
   useEffect(() => {
-    const fetchAnime = async () => {
-      try {
-        const response = await axios.get(`https://api.jikan.moe/v4/anime/${id}`);
-        const data = response.data.data;
-        setAnime(data);
+    const allLists = ['watchingList', 'onHoldList', 'droppedList', 'completedList', 'planToWatchList'];
+    let found = null;
 
-        // Check existing list
-        const allLists = ['watchingList', 'onHoldList', 'droppedList', 'completedList'];
-        for (const list of allLists) {
-          const stored = JSON.parse(localStorage.getItem(list)) || [];
-          const existing = stored.find(item => item.mal_id === data.mal_id);
-          if (existing) {
-            setEpisodesWatched(existing.episodesWatched || 0);
-            setStatus(list.replace('List', '')); // set status
-            break;
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching anime:', error);
+    for (const list of allLists) {
+      const stored = JSON.parse(localStorage.getItem(list)) || [];
+      const existing = stored.find(item => String(item.mal_id) === id);
+      if (existing) {
+        setAnime(existing);
+        setEpisodesWatched(existing.episodesWatched || 0);
+        setStatus(list.replace('List', ''));
+        found = true;
+        break;
       }
-    };
+    }
 
-    fetchAnime();
+    if (!found) {
+      console.error('Anime not found in local storage lists.');
+    }
   }, [id]);
 
   useEffect(() => {
     if (anime) {
       updateWatchlist(episodesWatched);
-
       if (anime.episodes && episodesWatched === anime.episodes) {
         moveToCompleted();
       }
@@ -51,9 +42,8 @@ const AnimeDetails = () => {
 
   const updateWatchlist = (watchedCount) => {
     const animeWithWatched = { ...anime, episodesWatched: watchedCount };
-
-    // Clean out of all lists
     const allLists = ['planToWatchList', 'watchingList', 'onHoldList', 'droppedList', 'completedList'];
+
     allLists.forEach(list => {
       const stored = JSON.parse(localStorage.getItem(list)) || [];
       const updated = stored.filter(item => item.mal_id !== anime.mal_id);
@@ -61,13 +51,11 @@ const AnimeDetails = () => {
     });
 
     if (watchedCount === 0) {
-      // Plan to Watch
       const plan = JSON.parse(localStorage.getItem('planToWatchList')) || [];
       plan.push(animeWithWatched);
       localStorage.setItem('planToWatchList', JSON.stringify(plan));
       setStatus('');
     } else {
-      // Watching
       const watching = JSON.parse(localStorage.getItem('watchingList')) || [];
       watching.push(animeWithWatched);
       localStorage.setItem('watchingList', JSON.stringify(watching));
@@ -89,9 +77,8 @@ const AnimeDetails = () => {
 
   const moveToList = (targetList) => {
     const animeWithWatched = { ...anime, episodesWatched };
-
-    // Remove from all other lists
     const lists = ['watchingList', 'onHoldList', 'droppedList'];
+
     lists.forEach(list => {
       const stored = JSON.parse(localStorage.getItem(list)) || [];
       const updated = stored.filter(item => item.mal_id !== anime.mal_id);
@@ -104,14 +91,12 @@ const AnimeDetails = () => {
 
     setStatus(targetList.replace('List', ''));
 
-    // Navigate
     if (targetList === 'onHoldList') navigate('/onhold');
     if (targetList === 'droppedList') navigate('/dropped');
   };
 
   const moveToCompleted = () => {
     const animeWithWatched = { ...anime, episodesWatched };
-
     let watchingList = JSON.parse(localStorage.getItem('watchingList')) || [];
     let completedList = JSON.parse(localStorage.getItem('completedList')) || [];
 
@@ -125,13 +110,13 @@ const AnimeDetails = () => {
     navigate('/completed');
   };
 
-  if (!anime) return <div>Loading...</div>;
+  if (!anime) return <div>Anime not found.</div>;
 
   return (
     <div style={{ maxWidth: '600px', margin: 'auto', padding: '1rem' }}>
       <h2>{anime.title}</h2>
       <img
-        src={anime.images?.jpg?.large_image_url}
+        src={anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url}
         alt={anime.title}
         style={{ width: '100%', borderRadius: '8px', marginBottom: '1rem' }}
       />
