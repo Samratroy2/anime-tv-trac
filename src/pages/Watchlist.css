@@ -1,39 +1,62 @@
 /*frontend\src\pages\Watchlist.css*/
 
 .watchlist-page {
-  padding: 1rem;
+  padding: 2rem;
 }
 
-.scroll-row {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
+/* Grid layout */
+.anime-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.5rem;
 }
 
+/* Anime card */
 .anime-card {
-  min-width: 160px;
-  text-align: center;
-  background: #222;
+  background: #1f1f1f;
   color: #fff;
   border: 2px solid black;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 1rem;
-  width: 200px;
+  text-align: center;
+  min-width: 160px;
+  max-width: 200px;
   box-shadow: 0 4px 12px rgb(17, 17, 17);
 }
 
 .anime-card img {
   width: 100%;
-  border-radius: 8px;
   height: auto;
+  border-radius: 8px;
 }
 
-.anime-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+/* Remove button */
+.remove-btn {
+  margin-top: 0.5rem;
+  padding: 6px 10px;
+  background-color: crimson;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
+/* Episode increment/decrement buttons */
+.episode-btn {
+  background: #444;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.episode-btn:hover {
+  background-color: #666;
+}
+
+/* Modal styles */
 .modal-overlay {
   position: fixed;
   top: 0;
