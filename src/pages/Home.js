@@ -1,16 +1,13 @@
-//frontend\src\pages\Home.js
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
-
 const categories = [
-  { title: 'Top Airing', url: 'https://api.jikan.moe/v4/top/anime?filter=airing' },
-  { title: 'Most Popular', url: 'https://api.jikan.moe/v4/top/anime?filter=bypopularity' },
-  { title: 'Top Rated', url: 'https://api.jikan.moe/v4/top/anime?filter=favorite' },
-  { title: 'Movies', url: 'https://api.jikan.moe/v4/anime?type=movie' },
-  { title: 'Upcoming', url: 'https://api.jikan.moe/v4/top/anime?filter=upcoming' }
+  { title: 'Top Airing' },
+  { title: 'Most Popular' },
+  { title: 'Top Rated' },
+  { title: 'Movies' },
+  { title: 'Upcoming' }
 ];
 
 const dummyData = [
@@ -36,15 +33,11 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    categories.forEach(async (cat) => {
-      try {
-        const response = await axios.get(cat.url);
-        setAnimeData(prev => ({ ...prev, [cat.title]: response.data.data.slice(0, 10) }));
-      } catch (error) {
-        console.error(`Error fetching ${cat.title}:`, error.message);
-        setAnimeData(prev => ({ ...prev, [cat.title]: dummyData }));
-      }
+    const localData = {};
+    categories.forEach(cat => {
+      localData[cat.title] = dummyData;
     });
+    setAnimeData(localData);
   }, []);
 
   return (
