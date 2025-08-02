@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 
 import Sidebar from './components/Sidebar';
 import { ThemeProvider, useTheme } from './ThemeContext';
-import { ClubProvider } from './contexts/ClubContext'; // ✅ ADD THIS
+import { ClubProvider } from './contexts/ClubContext';
 import Home from './pages/Home';
 import Watchlist from './pages/Watchlist';
 import Watching from './pages/Watching';
@@ -13,8 +13,6 @@ import Dropped from './pages/Dropped';
 import PlanToWatch from './pages/PlanToWatch';
 import Admin from './pages/Admin';
 import AnimeDetails from './pages/AnimeDetails';
-
-// 🆕 Club pages
 import ClubList from './pages/ClubList';
 import ClubPage from './pages/ClubPage'; 
 import CreateClub from './pages/CreateClub'; 
@@ -45,6 +43,7 @@ const AppLayout = () => {
       className="app-container"
       style={{
         display: 'flex',
+        flexDirection: 'row',
         backgroundColor: darkMode ? '#000' : '#f5f5f5',
         transition: 'background-color 0.3s ease',
       }}
@@ -54,40 +53,16 @@ const AppLayout = () => {
       <div style={containerStyle}>
         {/* Sidebar Toggle Button */}
         <button
+          className="menu-toggle"
           onClick={toggleSidebar}
-          style={{
-            position: 'absolute',
-            top: '10px',
-            left: '10px',
-            zIndex: 1000,
-            background: darkMode ? '#333' : '#ddd',
-            color: darkMode ? '#fff' : '#000',
-            border: 'none',
-            padding: '5px 10px',
-            cursor: 'pointer',
-            borderRadius: '5px',
-            transition: 'all 0.3s ease',
-          }}
         >
           {sidebarVisible ? '✖' : '☰'}
         </button>
 
         {/* Theme Toggle Button */}
         <button
+          className="theme-toggle"
           onClick={toggleTheme}
-          style={{
-            position: 'absolute',
-            top: '10px',
-            right: '10px',
-            zIndex: 1000,
-            background: darkMode ? '#444' : '#ccc',
-            color: darkMode ? '#fff' : '#000',
-            border: 'none',
-            padding: '5px 10px',
-            cursor: 'pointer',
-            borderRadius: '5px',
-            transition: 'all 0.3s ease',
-          }}
         >
           {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
         </button>
@@ -96,19 +71,13 @@ const AppLayout = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/anime/:id" element={<AnimeDetails />} />
-
-          {/* Watchlist Routes */}
           <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/watchlist/watching" element={<Watching />} />
           <Route path="/watchlist/completed" element={<Completed />} />
           <Route path="/watchlist/on-hold" element={<OnHold />} />
           <Route path="/watchlist/dropped" element={<Dropped />} />
           <Route path="/watchlist/plan-to-watch" element={<PlanToWatch />} />
-
-          {/* Admin Route */}
           <Route path="/admin" element={<Admin />} />
-
-          {/* Club Routes 🆕 */}
           <Route path="/clubs" element={<ClubList />} />
           <Route path="/clubs/create" element={<CreateClub />} />
           <Route path="/club/:id" element={<ClubPage />} />
@@ -118,11 +87,10 @@ const AppLayout = () => {
   );
 };
 
-// Main App
 const App = () => (
   <Router>
     <ThemeProvider>
-      <ClubProvider> {/* ✅ Club context provider added properly */}
+      <ClubProvider>
         <AppLayout />
       </ClubProvider>
     </ThemeProvider>

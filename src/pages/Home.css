@@ -100,3 +100,22 @@
     font-size: 1.2rem;
   }
   
+
+
+
+  .anime-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.anime-card {
+  flex: 1 1 calc(33.333% - 1rem);
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .anime-card {
+    flex: 1 1 100%;
+  }
+}
